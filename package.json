@@ -1,0 +1,41 @@
+{
+  "name": "product-description-paraphrase",
+  "version": "1.0.0",
+  "description": "A TypeScript application for paraphrasing product descriptions using OpenAI's API",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "openai",
+    "paraphrase",
+    "product-description",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.56.0",
+    "readline-sync": "^1.4.10",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/readline-sync": "^1.4.8",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.2"
+  }
+}
