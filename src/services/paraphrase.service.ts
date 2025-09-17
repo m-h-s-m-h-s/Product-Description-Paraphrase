@@ -1,6 +1,6 @@
 /**
- * Paraphrase service for product descriptions
- * Handles the core business logic for paraphrasing text using OpenAI
+ * Paraphrase service for simplifying product descriptions
+ * Automatically converts complex product descriptions into shorter, clearer versions
  * @module services/paraphrase
  */
 
@@ -8,39 +8,16 @@ import { config } from '../config';
 import { getOpenAIClient, handleOpenAIError, log } from '../utils';
 import type { 
   ParaphraseRequest, 
-  ParaphraseResponse, 
-  TargetLength 
+  ParaphraseResponse
 } from '../types';
 
 /**
- * Generates a system prompt based on the requested length
- * @param targetLength - The desired length for the paraphrase
- * @returns The system prompt for the AI
+ * Generates the system prompt that instructs gpt-5-nano to create simple, short paraphrases
+ * @returns The system prompt emphasizing clarity and brevity
  */
-function generateSystemPrompt(targetLength?: TargetLength): string {
-  let prompt = 'You are a helpful assistant that rewrites product descriptions. ';
-  prompt += 'Use simple, clear language that anyone can understand. ';
-  prompt += 'Keep the meaning and all important details, but use different words and sentence structures. ';
-  
-  // Add length-specific instructions
-  if (targetLength) {
-    switch (targetLength) {
-      case 'short':
-        prompt += 'Make the paraphrase concise and shorter than the original. ';
-        break;
-      case 'long':
-        prompt += 'Expand the description with more details and context. ';
-        break;
-      case 'medium':
-      default:
-        prompt += 'Keep the paraphrase approximately the same length as the original. ';
-        break;
-    }
-  }
-  
-  prompt += 'The paraphrase should be easy to read and understand while being completely different from the original text.';
-  
-  return prompt;
+function generateSystemPrompt(): string {
+  // Clear instructions to avoid adding information
+  return 'Rewrite the product description in simple, clear language. Make it shorter. IMPORTANT: Do NOT add any information, features, or details that are not explicitly mentioned in the original description. Only simplify what is already there.';
 }
 
 /**
@@ -49,28 +26,28 @@ function generateSystemPrompt(targetLength?: TargetLength): string {
  * @returns The user prompt
  */
 function generateUserPrompt(description: string): string {
-  return `Please paraphrase the following product description:\n\n${description}`;
+  return description;
 }
 
 /**
- * Main service class for paraphrasing product descriptions
+ * Service for converting product descriptions into simpler, shorter versions
+ * Uses gpt-5-nano to maintain meaning while improving readability
  */
 export class ParaphraseService {
   private readonly openaiClient = getOpenAIClient();
   private readonly config = config();
 
   /**
-   * Paraphrases a product description according to the given parameters
-   * @param request - The paraphrase request parameters
-   * @returns The paraphrase response
-   * @throws {AppError} If the paraphrase operation fails
+   * Converts a product description into a simpler, shorter version
+   * @param request - Contains the product description to simplify
+   * @returns Original and simplified versions with metadata
+   * @throws {AppError} If the AI request fails
    */
   async paraphrase(request: ParaphraseRequest): Promise<ParaphraseResponse> {
     const startTime = Date.now();
     
     log.info('Starting paraphrase request', {
       descriptionLength: request.description.length,
-      targetLength: request.targetLength,
     });
 
     try {
@@ -78,7 +55,7 @@ export class ParaphraseService {
       const messages = [
         {
           role: 'system' as const,
-          content: generateSystemPrompt(request.targetLength),
+          content: generateSystemPrompt(),
         },
         {
           role: 'user' as const,
@@ -90,14 +67,18 @@ export class ParaphraseService {
       const completion = await this.openaiClient.chat.completions.create({
         model: this.config.openai.model,
         messages,
-        max_tokens: this.config.openai.maxTokens,
-        temperature: this.config.openai.temperature,
         n: 1,
       });
 
+      log.debug('OpenAI API response', { completion });
+      
       const paraphrasedText = completion.choices[0]?.message?.content?.trim();
       
       if (!paraphrasedText) {
+        log.error('No content in API response', { 
+          choices: completion.choices,
+          usage: completion.usage 
+        });
         throw new Error('No paraphrase generated from the API');
       }
 
@@ -127,28 +108,6 @@ export class ParaphraseService {
     }
   }
 
-  /**
-   * Validates that the paraphrased text is sufficiently different from the original
-   * @param original - The original text
-   * @param paraphrased - The paraphrased text
-   * @returns True if the texts are sufficiently different
-   */
-  isSignificantlyDifferent(original: string, paraphrased: string): boolean {
-    // Simple check: ensure they're not identical and have some variation
-    if (original.toLowerCase() === paraphrased.toLowerCase()) {
-      return false;
-    }
-    
-    // Calculate word-level similarity (simple approach)
-    const originalWords = original.toLowerCase().split(/\s+/);
-    const paraphrasedWords = paraphrased.toLowerCase().split(/\s+/);
-    
-    const commonWords = originalWords.filter((word) => paraphrasedWords.includes(word));
-    const similarity = commonWords.length / Math.max(originalWords.length, paraphrasedWords.length);
-    
-    // Consider it different if less than 70% similar
-    return similarity < 0.7;
-  }
 }
 
 /**

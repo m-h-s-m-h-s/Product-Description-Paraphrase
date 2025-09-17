@@ -1,5 +1,5 @@
 /**
- * Configuration module for the application
+ * Configuration module for the Product Description Simplifier
  * Handles environment variables and configuration validation
  * @module config
  */
@@ -19,8 +19,6 @@ const envSchema = z.object({
   // OpenAI Configuration
   OPENAI_API_KEY: z.string().min(1, 'OpenAI API key is required'),
   OPENAI_MODEL: z.string().default('gpt-5-nano'),
-  MAX_TOKENS: z.string().transform(Number).default('150'),
-  TEMPERATURE: z.string().transform(Number).default('0.7'),
   
   // Application Configuration
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -61,8 +59,6 @@ export function getConfig(): AppConfig {
     openai: {
       apiKey: env.OPENAI_API_KEY,
       model: env.OPENAI_MODEL,
-      maxTokens: env.MAX_TOKENS,
-      temperature: env.TEMPERATURE,
     },
   };
 }

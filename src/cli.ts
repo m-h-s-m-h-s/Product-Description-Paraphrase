@@ -1,11 +1,10 @@
 /**
- * Command-line interface for the paraphrase application
- * Provides interactive prompts for user input
+ * Simple command-line interface for the product description simplifier
+ * Handles user input and displays results with clear formatting
  * @module cli
  */
 
 import readlineSync from 'readline-sync';
-import { TargetLength } from './types';
 import { validateDescription, sanitizeInput } from './utils/validation';
 
 /**
@@ -37,17 +36,18 @@ function printColored(message: string, color: string): void {
 export function printHeader(): void {
   console.clear();
   printColored('\n╔════════════════════════════════════════════╗', colors.cyan);
-  printColored('║     Product Description Paraphraser        ║', colors.cyan);
-  printColored('║         Powered by OpenAI GPT              ║', colors.cyan);
+  printColored('║    Product Description Simplifier         ║', colors.cyan);
+  printColored('║      Powered by OpenAI gpt-5-nano         ║', colors.cyan);
   printColored('╚════════════════════════════════════════════╝\n', colors.cyan);
 }
 
 /**
- * Prompts the user for a product description
- * @returns The validated product description
+ * Gets the product description from user input
+ * Supports multi-line input (press Enter twice to finish)
+ * @returns The validated and sanitized description
  */
 export function promptForDescription(): string {
-  printColored('Enter the product description to paraphrase:', colors.yellow);
+  printColored('Enter the product description to simplify:', colors.yellow);
   printColored('(Press Enter twice when done)', colors.dim);
   
   const lines: string[] = [];
@@ -77,41 +77,10 @@ export function promptForDescription(): string {
 }
 
 /**
- * Prompts the user to select a target length
- * @returns The selected target length or undefined
- */
-export function promptForTargetLength(): TargetLength | undefined {
-  printColored('\nSelect target length for the paraphrase (optional):', colors.yellow);
-  
-  const lengthOptions = [
-    'Skip (similar to original)',
-    'Short - Concise version',
-    'Medium - Similar length',
-    'Long - Extended version',
-  ];
-  
-  const index = readlineSync.keyInSelect(lengthOptions, 'Choose length:', {
-    cancel: false,
-  });
-  
-  if (index === 0) {
-    return undefined;
-  }
-  
-  const lengthMap: Record<number, TargetLength> = {
-    1: TargetLength.SHORT,
-    2: TargetLength.MEDIUM,
-    3: TargetLength.LONG,
-  };
-  
-  return lengthMap[index];
-}
-
-/**
- * Displays the paraphrase result
- * @param original - The original description
- * @param paraphrased - The paraphrased description
- * @param tokensUsed - Number of tokens used (optional)
+ * Displays the simplification results side by side
+ * @param original - The original complex description
+ * @param paraphrased - The simplified version
+ * @param tokensUsed - API tokens consumed (optional)
  */
 export function displayResult(original: string, paraphrased: string, tokensUsed?: number): void {
   console.log('\n' + '═'.repeat(50));
@@ -119,7 +88,7 @@ export function displayResult(original: string, paraphrased: string, tokensUsed?
   printColored('\n📝 Original Description:', colors.blue);
   console.log(original);
   
-  printColored('\n✨ Paraphrased Description:', colors.green);
+  printColored('\n✨ Simplified Description:', colors.green);
   console.log(paraphrased);
   
   if (tokensUsed) {
@@ -134,7 +103,7 @@ export function displayResult(original: string, paraphrased: string, tokensUsed?
  * @returns True if the user wants to continue
  */
 export function promptToContinue(): boolean {
-  const answer = readlineSync.keyInYN('Would you like to paraphrase another description?');
+  const answer = readlineSync.keyInYN('Would you like to simplify another description?');
   return answer === true;
 }
 
@@ -159,6 +128,6 @@ export function displayLoading(message: string = 'Processing...'): void {
  * Displays a goodbye message
  */
 export function displayGoodbye(): void {
-  printColored('\n👋 Thank you for using Product Description Paraphraser!', colors.green);
+  printColored('\n👋 Thank you for using Product Description Simplifier!', colors.green);
   printColored('Goodbye!\n', colors.cyan);
 }

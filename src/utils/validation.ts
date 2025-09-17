@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { AppError, ErrorType, TargetLength } from '../types';
+import { AppError, ErrorType } from '../types';
 
 /**
  * Maximum allowed length for product descriptions
@@ -27,11 +27,6 @@ const descriptionSchema = z
   .trim();
 
 /**
- * Schema for validating target length
- */
-const targetLengthSchema = z.nativeEnum(TargetLength).optional();
-
-/**
  * Validates a product description
  * @param description - The description to validate
  * @returns The validated and trimmed description
@@ -49,27 +44,6 @@ export function validateDescription(description: string): string {
       );
     }
     throw error;
-  }
-}
-
-/**
- * Validates the target length option
- * @param length - The target length to validate
- * @returns The validated target length or undefined
- * @throws {AppError} If validation fails
- */
-export function validateTargetLength(length: string | undefined): TargetLength | undefined {
-  if (!length) return undefined;
-  
-  try {
-    return targetLengthSchema.parse(length);
-  } catch (error) {
-    const validLengths = Object.values(TargetLength).join(', ');
-    throw new AppError(
-      ErrorType.VALIDATION_ERROR,
-      `Invalid target length: "${length}". Valid options are: ${validLengths}`,
-      error,
-    );
   }
 }
 

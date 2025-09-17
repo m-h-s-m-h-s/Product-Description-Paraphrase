@@ -1,6 +1,6 @@
 /**
- * Logger utility for the application
- * Provides structured logging with Winston
+ * Logger utility for the Product Description Simplifier
+ * Provides structured logging with Winston for debugging and monitoring
  * @module utils/logger
  */
 

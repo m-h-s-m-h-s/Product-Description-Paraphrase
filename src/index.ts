@@ -1,5 +1,6 @@
 /**
- * Main entry point for the Product Description Paraphraser application
+ * Main entry point for the Product Description Simplifier
+ * Coordinates the CLI interface with the simplification service
  * @module index
  */
 
@@ -46,16 +47,14 @@ class Application {
       try {
         // Get user input
         const description = cli.promptForDescription();
-        const targetLength = cli.promptForTargetLength();
         
         // Create paraphrase request
         const request: ParaphraseRequest = {
           description,
-          targetLength,
         };
         
         // Show loading message
-        cli.displayLoading('Generating paraphrase...');
+        cli.displayLoading('Simplifying your description...');
         
         // Call the paraphrase service
         const response = await this.paraphraseService.paraphrase(request);
@@ -66,18 +65,6 @@ class Application {
           response.paraphrased,
           response.tokensUsed,
         );
-        
-        // Check if the paraphrase is significantly different
-        if (!this.paraphraseService.isSignificantlyDifferent(
-          response.original,
-          response.paraphrased,
-        )) {
-          log.warn('Generated paraphrase is too similar to the original');
-          cli.displayError(
-            'The generated paraphrase is very similar to the original. ' +
-            'Try using a different tone or length setting.',
-          );
-        }
         
         // Ask if user wants to continue
         continueRunning = cli.promptToContinue();

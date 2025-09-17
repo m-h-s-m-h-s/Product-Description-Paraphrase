@@ -1,5 +1,5 @@
 /**
- * Type definitions for the Product Description Paraphrase application
+ * Type definitions for the Product Description Simplifier
  * @module types
  */
 
@@ -9,12 +9,8 @@
 export interface OpenAIConfig {
   /** OpenAI API key for authentication */
   apiKey: string;
-  /** Model to use for text generation (e.g., gpt-4, gpt-3.5-turbo) */
+  /** GPT model to use (default: gpt-5-nano) */
   model: string;
-  /** Maximum number of tokens to generate */
-  maxTokens: number;
-  /** Sampling temperature (0-2). Higher values make output more random */
-  temperature: number;
 }
 
 /**
@@ -30,39 +26,25 @@ export interface AppConfig {
 }
 
 /**
- * Request parameters for paraphrasing a product description
+ * Request to simplify a product description
  */
 export interface ParaphraseRequest {
-  /** The original product description to paraphrase */
+  /** The product description to simplify into clearer language */
   description: string;
-  /** Optional target length (short, medium, long) */
-  targetLength?: TargetLength;
 }
 
 /**
- * Response from the paraphrase service
+ * Response containing the simplified product description
  */
 export interface ParaphraseResponse {
   /** The original input description */
   original: string;
-  /** The paraphrased description */
+  /** The simplified, shorter description */
   paraphrased: string;
-  /** Timestamp of when the paraphrase was generated */
+  /** When the simplification was created */
   timestamp: Date;
-  /** Number of tokens used in the API call */
+  /** API tokens consumed */
   tokensUsed?: number;
-}
-
-/**
- * Target length options for the paraphrased text
- */
-export enum TargetLength {
-  /** Shorter than the original */
-  SHORT = 'short',
-  /** Similar length to the original */
-  MEDIUM = 'medium',
-  /** Longer and more detailed than the original */
-  LONG = 'long',
 }
 
 /**

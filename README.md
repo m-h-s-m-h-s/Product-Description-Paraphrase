@@ -1,17 +1,28 @@
 # Product Description Paraphraser
 
-A modern TypeScript application that uses OpenAI's GPT API to intelligently paraphrase product descriptions. Built with clean architecture, comprehensive error handling, and an intuitive command-line interface.
+A streamlined TypeScript application that automatically converts product descriptions into shorter, clearer versions using OpenAI's gpt-5-nano model. Perfect for creating concise, easy-to-understand product copy.
+
+## 💡 What It Does
+
+This tool takes complex, lengthy product descriptions and transforms them into simple, clear versions that anyone can understand. It's designed for:
+
+- **E-commerce teams** needing consistent, simple product copy
+- **Content creators** wanting to simplify technical descriptions
+- **Marketers** looking to make products more accessible
+- **Anyone** who needs to make product information clearer
+
+**Example transformation:**
+- ❌ "This premium leather wallet features multiple card slots, a bill compartment, and RFID protection for secure storage."
+- ✅ "A high-quality leather wallet with card slots, bill space, and technology to protect your cards from scanning."
 
 ## 🚀 Features
 
-- **Intelligent Paraphrasing**: Leverages OpenAI's GPT models to generate high-quality, simple, and clear paraphrases
-- **Length Control**: Generate shorter, similar, or longer paraphrases based on your needs
-- **Interactive CLI**: User-friendly command-line interface with colored output
-- **Robust Error Handling**: Comprehensive error handling for API issues, rate limits, and validation
-- **Modern TypeScript**: Fully typed with strict TypeScript configuration
-- **Clean Architecture**: Organized with separation of concerns and modular design
-- **Configurable**: Environment-based configuration with validation
-- **Logging**: Structured logging with Winston for debugging and monitoring
+- **Simple & Clear Output**: Automatically generates shorter, easier-to-understand versions of product descriptions
+- **One-Step Process**: Just paste your description and get an instant paraphrase - no options to configure
+- **Smart Simplification**: Uses gpt-5-nano to maintain meaning while using simpler language
+- **Interactive CLI**: Clean command-line interface with colored output for easy reading
+- **Enterprise-Ready**: Built with TypeScript, comprehensive error handling, and structured logging
+- **Secure Configuration**: Environment-based API key management with validation
 
 ## 📋 Prerequisites
 
@@ -33,14 +44,18 @@ A modern TypeScript application that uses OpenAI's GPT API to intelligently para
    ```
 
 3. **Set up environment variables**
+   
+   Copy the example environment file:
    ```bash
    cp env.example .env
    ```
    
-   Edit `.env` and add your OpenAI API key:
+   Open `.env` in your editor and replace the placeholder with your actual OpenAI API key:
    ```env
-   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    ```
+   
+   **Why env.example?** This file serves as a template showing all required environment variables without exposing sensitive data. Your actual `.env` file (with real API keys) should never be committed to version control.
 
 4. **Build the project**
    ```bash
@@ -60,16 +75,13 @@ Or for development with auto-reload:
 npm run dev
 ```
 
-### Using the CLI
+### How It Works
 
-1. **Enter Product Description**: Type or paste your product description. Press Enter twice when done.
+1. **Start the app** and you'll see the welcome screen
+2. **Paste your product description** - press Enter twice when done
+3. **Get instant results** - the app automatically creates a shorter, clearer version
 
-2. **Select Target Length** (Optional):
-   - Short: Concise version
-   - Medium: Similar length
-   - Long: Extended version
-
-3. **View Results**: The application will display both the original and paraphrased descriptions using simple, clear language.
+That's it! No settings to configure, no options to choose - just simple, effective paraphrasing.
 
 ### Example
 
@@ -84,13 +96,6 @@ Enter the product description to paraphrase:
 > This premium leather wallet features multiple card slots,
 > a bill compartment, and RFID protection for secure storage.
 > 
-
-Select target length for the paraphrase (optional):
-[0] Skip (similar to original)
-[1] Short - Concise version
-[2] Medium - Similar length
-[3] Long - Extended version
-Choose length: 0
 
 ⏳ Generating paraphrase...
 
@@ -128,7 +133,7 @@ Product-Description-Paraphrase/
 │   ├── cli.ts           # CLI interface components
 │   └── index.ts         # Application entry point
 ├── dist/                # Compiled JavaScript (generated)
-├── .env.example         # Example environment variables
+├── env.example          # Template for environment variables (copy to .env)
 ├── .eslintrc.json       # ESLint configuration
 ├── .prettierrc          # Prettier configuration
 ├── package.json         # Project dependencies
@@ -144,8 +149,6 @@ Product-Description-Paraphrase/
 |----------|-------------|---------|----------|
 | `OPENAI_API_KEY` | Your OpenAI API key | - | Yes |
 | `OPENAI_MODEL` | GPT model to use | `gpt-5-nano` | No |
-| `MAX_TOKENS` | Maximum tokens for response | `150` | No |
-| `TEMPERATURE` | Sampling temperature (0-2) | `0.7` | No |
 | `NODE_ENV` | Environment mode | `development` | No |
 | `LOG_LEVEL` | Logging level | `info` | No |
 
@@ -160,22 +163,21 @@ Product-Description-Paraphrase/
 - `npm run typecheck` - Run TypeScript type checking
 - `npm run clean` - Remove build artifacts
 
-## 🧪 Architecture and Design
+## 🧪 Technical Details
 
-### Clean Architecture Principles
+### How It Works Internally
 
-1. **Separation of Concerns**: Each module has a single, well-defined responsibility
-2. **Dependency Injection**: Services are injected rather than hard-coded
-3. **Interface Segregation**: Clear interfaces between layers
-4. **Error Handling**: Centralized error handling with custom error types
+1. **Input Processing**: Validates and sanitizes the product description
+2. **AI Prompt**: Sends a carefully crafted prompt to gpt-5-nano asking for a simple, short paraphrase
+3. **Response Handling**: Processes the AI response and displays it clearly
 
-### Key Components
+### Key Design Decisions
 
-- **Config Module**: Validates and provides typed configuration
-- **Service Layer**: Contains business logic for paraphrasing
-- **Utils Layer**: Reusable utilities for logging, validation, and API clients
-- **CLI Module**: Handles user interaction and display
-- **Type Definitions**: Comprehensive TypeScript types for type safety
+- **Simplicity First**: No configuration options - the app does one thing perfectly
+- **Clear Language**: System prompt specifically asks for simple, easy-to-understand language
+- **Concise Output**: Always generates shorter versions to improve readability
+- **Consistent Results**: gpt-5-nano provides reliable simplification with its built-in constraints
+- **Error Recovery**: Gracefully handles API errors, rate limits, and connection issues
 
 ## 🐛 Error Handling
 
@@ -207,10 +209,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## ⚠️ Important Notes
 
-1. **API Costs**: Using the OpenAI API incurs costs. Monitor your usage in the [OpenAI dashboard](https://platform.openai.com/usage).
+### Environment Setup
+- **env.example vs .env**: The `env.example` file is a template showing required variables. Copy it to `.env` and add your actual API key.
+- **Security**: The `.env` file contains sensitive data and is automatically ignored by git. Never commit it to version control.
+- **Getting an API Key**: Sign up at [OpenAI](https://platform.openai.com/api-keys) to get your API key.
 
-2. **Model Selection**: The application uses `gpt-5-nano` by default. You can change the model by updating `OPENAI_MODEL` in your `.env` file.
-
-3. **Rate Limits**: Be aware of OpenAI's rate limits. The application includes retry logic and rate limit handling.
-
-4. **Security**: Never commit your `.env` file or expose your API key in public repositories.
+### API Usage
+1. **Costs**: Using the OpenAI API incurs costs. Monitor your usage in the [OpenAI dashboard](https://platform.openai.com/usage).
+2. **Model**: The application uses `gpt-5-nano` by default. You can change this in your `.env` file.
+3. **Rate Limits**: The application includes automatic retry logic for rate limit handling.

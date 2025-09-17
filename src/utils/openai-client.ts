@@ -33,8 +33,6 @@ export function createOpenAIClient(): OpenAI {
 
   log.debug('Creating OpenAI client', {
     model: appConfig.openai.model,
-    maxTokens: appConfig.openai.maxTokens,
-    temperature: appConfig.openai.temperature,
   });
 
   return new OpenAI(clientOptions);
@@ -102,6 +100,7 @@ export function handleOpenAIError(error: unknown): never {
     }
   }
 
+  log.error('Unknown error in OpenAI client', { error });
   throw new AppError(
     ErrorType.UNKNOWN_ERROR,
     'An unexpected error occurred while calling OpenAI API',
