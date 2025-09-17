@@ -12,11 +12,11 @@ import type {
 } from '../types';
 
 /**
- * Generates the system prompt that instructs gpt-5-nano to create simple, short paraphrases
- * @returns The system prompt emphasizing clarity and brevity
+ * Generates the system prompt that instructs gpt-5-nano to simplify without adding information
+ * @returns The system prompt that ensures no new details are invented
  */
 function generateSystemPrompt(): string {
-  // Clear instructions to avoid adding information
+  // Critical: Prevent the AI from adding information not in the original
   return 'Rewrite the product description in simple, clear language. Make it shorter. IMPORTANT: Do NOT add any information, features, or details that are not explicitly mentioned in the original description. Only simplify what is already there.';
 }
 
@@ -64,6 +64,8 @@ export class ParaphraseService {
       ];
 
       // Call OpenAI API
+      // Note: gpt-5-nano doesn't support temperature, top_p, or max_tokens parameters
+      // It uses internal reasoning tokens that don't affect pricing
       const completion = await this.openaiClient.chat.completions.create({
         model: this.config.openai.model,
         messages,

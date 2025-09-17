@@ -1,7 +1,7 @@
 {
   "name": "product-description-paraphrase",
   "version": "1.0.0",
-  "description": "Automatically simplify product descriptions into shorter, clearer versions using OpenAI's gpt-5-nano",
+  "description": "Simplify product descriptions into shorter, clearer versions without adding information, using OpenAI's gpt-5-nano",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

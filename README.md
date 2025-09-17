@@ -1,6 +1,6 @@
-# Product Description Paraphraser
+# Product Description Simplifier
 
-A streamlined TypeScript application that automatically converts product descriptions into shorter, clearer versions using OpenAI's gpt-5-nano model. Perfect for creating concise, easy-to-understand product copy.
+A streamlined TypeScript application that automatically converts product descriptions into shorter, clearer versions using OpenAI's gpt-5-nano model. Perfect for creating concise, easy-to-understand product copy without adding any information not present in the original.
 
 ## 💡 What It Does
 
@@ -18,8 +18,9 @@ This tool takes complex, lengthy product descriptions and transforms them into s
 ## 🚀 Features
 
 - **Simple & Clear Output**: Automatically generates shorter, easier-to-understand versions of product descriptions
-- **One-Step Process**: Just paste your description and get an instant paraphrase - no options to configure
-- **Smart Simplification**: Uses gpt-5-nano to maintain meaning while using simpler language
+- **One-Step Process**: Just paste your description and get an instant simplification - no configuration needed
+- **Smart Simplification**: Uses gpt-5-nano to maintain exact meaning while using simpler language
+- **No Added Information**: The AI is instructed to never add details not in the original
 - **Interactive CLI**: Clean command-line interface with colored output for easy reading
 - **Enterprise-Ready**: Built with TypeScript, comprehensive error handling, and structured logging
 - **Secure Configuration**: Environment-based API key management with validation
@@ -81,49 +82,52 @@ npm run dev
 2. **Paste your product description** - press Enter twice when done
 3. **Get instant results** - the app automatically creates a shorter, clearer version
 
-That's it! No settings to configure, no options to choose - just simple, effective paraphrasing.
+That's it! No settings to configure, no options to choose - just simple, effective simplification.
 
 ### Example
 
 ```
 ╔════════════════════════════════════════════╗
-║     Product Description Paraphraser        ║
-║         Powered by OpenAI GPT              ║
+║    Product Description Simplifier         ║
+║      Powered by OpenAI gpt-5-nano         ║
 ╚════════════════════════════════════════════╝
 
-Enter the product description to paraphrase:
+Enter the product description to simplify:
 (Press Enter twice when done)
-> This premium leather wallet features multiple card slots,
-> a bill compartment, and RFID protection for secure storage.
+> This 130-piece tool kit includes everything you need to handle most home or DIY repairs. 
+> The tool kit includes a hammer, screwdrivers, driver bits, wrenches, socket set, pliers, 
+> cutters, locking pliers, tape measure, hex wrenches, precision screwdrivers, and commonly 
+> used fasteners and anchors. It comes packed in a convenient carrying case.
 > 
 
-⏳ Generating paraphrase...
+⏳ Simplifying your description...
 
 ═══════════════════════════════════════════════
 
 📝 Original Description:
-This premium leather wallet features multiple card slots,
-a bill compartment, and RFID protection for secure storage.
+This 130-piece tool kit includes everything you need to handle most home or DIY repairs. 
+The tool kit includes a hammer, screwdrivers, driver bits, wrenches, socket set, pliers, 
+cutters, locking pliers, tape measure, hex wrenches, precision screwdrivers, and commonly 
+used fasteners and anchors. It comes packed in a convenient carrying case.
 
-✨ Paraphrased Description:
-This wallet is made from high-quality leather and includes 
-several slots for your cards, a space for your bills, and 
-special technology that protects your cards from being 
-scanned without your permission.
+✨ Simplified Description:
+130-piece home and DIY tool kit. It has a hammer, screwdrivers and bits, wrenches, 
+a socket set, pliers, cutters, locking pliers, a tape measure, hex wrenches, 
+precision screwdrivers, and common fasteners and anchors. Stored in a carrying case.
 
-📊 Tokens used: 89
+📊 Tokens used: 930
 ═══════════════════════════════════════════════
 ```
 
 ## 🏗️ Project Structure
 
 ```
-Product-Description-Paraphrase/
+Product-Description-Simplifier/
 ├── src/
 │   ├── config/          # Configuration management
 │   │   └── index.ts     # Environment validation and config
 │   ├── services/        # Business logic
-│   │   └── paraphrase.service.ts
+│   │   └── paraphrase.service.ts # Simplification service
 │   ├── utils/           # Utility functions
 │   │   ├── logger.ts    # Winston logger setup
 │   │   ├── openai-client.ts # OpenAI client wrapper
@@ -148,7 +152,7 @@ Product-Description-Paraphrase/
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `OPENAI_API_KEY` | Your OpenAI API key | - | Yes |
-| `OPENAI_MODEL` | GPT model to use | `gpt-5-nano` | No |
+| `OPENAI_MODEL` | Model to use (gpt-5-nano has specific constraints) | `gpt-5-nano` | No |
 | `NODE_ENV` | Environment mode | `development` | No |
 | `LOG_LEVEL` | Logging level | `info` | No |
 
@@ -175,8 +179,9 @@ Product-Description-Paraphrase/
 
 - **Simplicity First**: No configuration options - the app does one thing perfectly
 - **Clear Language**: System prompt specifically asks for simple, easy-to-understand language
+- **No Added Information**: The AI is explicitly instructed to never add details not in the original
 - **Concise Output**: Always generates shorter versions to improve readability
-- **Consistent Results**: gpt-5-nano provides reliable simplification with its built-in constraints
+- **Minimal Configuration**: Works with gpt-5-nano's constraints (no temperature/top_p/max_tokens control)
 - **Error Recovery**: Gracefully handles API errors, rate limits, and connection issues
 
 ## 🐛 Error Handling
@@ -216,5 +221,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### API Usage
 1. **Costs**: Using the OpenAI API incurs costs. Monitor your usage in the [OpenAI dashboard](https://platform.openai.com/usage).
-2. **Model**: The application uses `gpt-5-nano` by default. You can change this in your `.env` file.
+2. **Model Constraints**: gpt-5-nano has specific limitations:
+   - No temperature control (always uses default)
+   - No top_p sampling control
+   - No max_tokens parameter support
+   - Uses internal reasoning tokens that don't affect pricing
 3. **Rate Limits**: The application includes automatic retry logic for rate limit handling.
